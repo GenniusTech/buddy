@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\UsuarioController;
+use App\Http\Middleware\APITokenMiddleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +19,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::group(['middleware' => APITokenMiddleware::class], function () {
+    Route::post('/cadastro', [UsuarioController::class ,'cadastrarUser']) ->name('cadastro');
+    Route::post('/login', [UsuarioController::class ,'login']) ->name('login');
+    Route::post('/resetPassword', [UsuarioController::class ,'resetPassword']) ->name('resetPassword');
+    Route::post('/listUser', [UsuarioController::class ,'listUser']) ->name('listUser');
+
 });
