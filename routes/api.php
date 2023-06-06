@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReceitaController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Middleware\APITokenMiddleware;
 use Illuminate\Http\Request;
@@ -25,5 +26,10 @@ Route::group(['middleware' => APITokenMiddleware::class], function () {
     Route::post('/login', [UsuarioController::class ,'login']) ->name('login');
     Route::post('/resetPassword', [UsuarioController::class ,'resetPassword']) ->name('resetPassword');
     Route::post('/listUser', [UsuarioController::class ,'listUser']) ->name('listUser');
+
+    Route::post('/receitas', [ReceitaController::class ,'store'])->name('receitas');
+    Route::post('/receitas/excluir', [ReceitaController::class ,'destroy'])->name('receitas_excluir');
+    Route::post('/receitas/verificar', [ReceitaController::class ,'verify'])->name('receitas_verificar');
+    Route::get('/receitas',[ReceitaController::class ,'index'])->name('receitas');
 
 });
