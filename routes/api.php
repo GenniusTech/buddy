@@ -1,6 +1,13 @@
 <?php
 
+use App\Http\Controllers\DespesaController;
+use App\Http\Controllers\ReceitaController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\UsuarioController;
+use App\Http\Middleware\APITokenMiddleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +23,28 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+Route::group(['middleware' => APITokenMiddleware::class], function () {
+    Route::post('/cadastro', [UsuarioController::class ,'cadastrarUser']) ->name('cadastro');
+    Route::post('/login', [UsuarioController::class ,'login']) ->name('login');
+    Route::post('/resetPassword', [UsuarioController::class ,'resetPassword']) ->name('resetPassword');
+    Route::post('/listUser', [UsuarioController::class ,'listUser']) ->name('listUser');
+
+    Route::post('/wallet', [WalletController::class, 'store']);
+    Route::post('/wallet/{id}', [WalletController::class, 'destroy']);
+    Route::post('/listWallet', [WalletController::class, 'index']);
+
+    Route::post('/tags', [TagController::class, 'store']);
+    Route::post('/tags/{id}', [TagController::class, 'destroy']);
+    Route::post('/listTags', [TagController::class, 'index']);
+
+    Route::post('/receitas', [ReceitaController::class ,'store'])->name('receitas');
+    Route::post('/receitas/excluir', [ReceitaController::class ,'destroy'])->name('receitas_excluir');
+    Route::post('/receitas/verificar', [ReceitaController::class ,'verify'])->name('receitas_verificar');
+    Route::post('/listReceitas', [ReceitaController::class, 'index']);
+
+    Route::post('/despesas', [DespesaController::class, 'store']);
+    Route::post('/despesas/{id}', [DespesaController::class, 'destroy']);
+    Route::post('/despesas/check/{id}', [DespesaController::class, 'check']);
+    Route::post('/listDespesas', [DespesaController::class, 'index']);
 });
